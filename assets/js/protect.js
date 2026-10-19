@@ -1,7 +1,8 @@
 // Protezione dei contenuti: blocca copia, salvataggio immagini, menu del tasto
 // destro, stampa e scorciatoie comuni. Quando qualcuno prova a fare uno
-// screenshot o a copiare, invece di un muro mostra un pannello che invita a
-// condividere il link del sito (copia, WhatsApp, Telegram, condivisione nativa).
+// screenshot, una registrazione dello schermo o a copiare, invece di un muro
+// mostra un pannello che invita a condividere il link del sito (copia,
+// WhatsApp, Telegram, condivisione nativa) o a chiedere info al team.
 // Nessun sito può impedire del tutto gli screenshot: questi sono deterrenti.
 // I campi dei moduli e i dati di contatto restano selezionabili.
 
@@ -11,8 +12,13 @@ const isEditable = (el) => !!(el && el.closest && el.closest(EDITABLE));
 export const DEFAULT_MESSAGES = {
   screenshot: {
     eyebrow: '> screenshot rilevato',
-    title: 'Vuoi farlo vedere a qualcuno?',
-    text: 'Uno screenshot mostra una conferma su quattro. Il link le mostra tutte, grafico animato compreso.',
+    title: "Bella mossa. Ma c'è di meglio.",
+    text: 'Il link arriva intero, animazioni comprese. Mandalo a chi fa trading.',
+  },
+  recording: {
+    eyebrow: '> registrazione schermo rilevata',
+    title: "Bella mossa. Ma c'è di meglio.",
+    text: 'Il link arriva intero, animazioni comprese. Mandalo a chi fa trading.',
   },
   copy: {
     eyebrow: '> copia bloccata',
@@ -26,12 +32,17 @@ export const DEFAULT_MESSAGES = {
   },
 };
 
-export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '' } = {}) {
+export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '', whatsapp = '', contactName = 'Francesco', contactText = '', onContact = null } = {}) {
   const root = document.documentElement;
   root.classList.add('protect');
   const url = `${location.origin}${location.pathname.replace(/index\.html$/, "")}`;
   const text = shareText || document.title;
   const enc = encodeURIComponent;
+  const isWindows = /Win/i.test(navigator.userAgentData?.platform || navigator.platform || navigator.userAgent);
+  const waText = contactText || `Ciao ${contactName}! Ho visto il sito di Team Zero Errori e vorrei informazioni sui percorsi.`;
+  const contactHtml = whatsapp
+    ? `<a class="shield-wa" target="_blank" rel="noopener" href="https://wa.me/${whatsapp}?text=${enc(waText)}">Chiedi info a ${contactName} su WhatsApp</a>`
+    : `<button type="button" class="shield-wa" id="shield-contact">Chiedi info a ${contactName}</button>`;
 
   const shield = document.createElement('div');
   shield.className = 'shield';
@@ -55,6 +66,10 @@ export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '' } =
           <a class="share-btn share-fb" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=${enc(url)}">Facebook</a>
           <a class="share-btn share-x" target="_blank" rel="noopener" href="https://x.com/intent/post?url=${enc(url)}&text=${enc(text)}">X</a>
           <button type="button" class="share-btn share-native" id="shield-native" hidden>Altre app…</button>
+        </div>
+        <div class="shield-contact">
+          <p>Hai domande sul corso? Ti risponde una persona del team.</p>
+          ${contactHtml}
         </div>
         <button type="button" class="shield-close" id="shield-close">← Torna al sito</button>
       </div>
@@ -90,6 +105,7 @@ export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '' } =
   }
 
   $('shield-close').addEventListener('click', close);
+  $('shield-contact')?.addEventListener('click', () => { close(); onContact?.(); });
   $('shield-copy').addEventListener('click', async () => {
     try { await navigator.clipboard.writeText(url); }
     catch {
@@ -133,7 +149,10 @@ export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '' } =
   document.addEventListener('keydown', (e) => {
     const k = e.key.toLowerCase();
     const mod = e.ctrlKey || e.metaKey;
-    if (mod && e.shiftKey && ['3', '4', '5', 's'].includes(k)) { open('screenshot'); return; }
+    // registrazione: macOS Cmd+Shift+5, Windows Win+Alt+R (Xbox Game Bar), Win+G, Win+Shift+R (Strumento di cattura)
+    if (mod && e.shiftKey && k === '5') { open('recording'); return; }
+    if (isWindows && e.metaKey && ((e.altKey && k === 'r') || k === 'g' || (e.shiftKey && k === 'r'))) { open('recording'); return; }
+    if (mod && e.shiftKey && ['3', '4', 's'].includes(k)) { open('screenshot'); return; }
     if (k === 'printscreen') { open('screenshot'); return; }
     if (mod && ['s', 'p', 'u'].includes(k)) { e.preventDefault(); return; }
     if (mod && ['c', 'x', 'a'].includes(k) && !isEditable(e.target)) { e.preventDefault(); open('copy'); }

@@ -31,6 +31,8 @@ const CONFIG = {
   // messaggi del pannello che appare dopo uno screenshot o un tentativo di copia
   // (lascia null per usare quelli predefiniti in assets/js/protect.js)
   shareMessages: null,
+  // messaggio precompilato quando un visitatore scrive su WhatsApp
+  whatsappText: 'Ciao Francesco! Ho visto il sito di Team Zero Errori e vorrei informazioni sui percorsi.',
 };
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -815,7 +817,7 @@ const modal = (() => {
   const fab = $('#fab');
   if (CONFIG.responseTime) $('#fab-sub').textContent = `di solito risponde entro ${CONFIG.responseTime}`;
   fab.addEventListener('click', () => {
-    if (CONFIG.whatsapp) window.open(`https://wa.me/${CONFIG.whatsapp}`, '_blank', 'noopener');
+    if (CONFIG.whatsapp) window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(CONFIG.whatsappText)}`, '_blank', 'noopener');
     else modal.open();
   });
 })();
@@ -860,6 +862,15 @@ if (finePointer && !reduced) {
   });
 }
 
-if (CONFIG.protectContent) initProtection({ messages: CONFIG.shareMessages || undefined, shareText: CONFIG.shareText });
+if (CONFIG.protectContent) {
+  initProtection({
+    messages: CONFIG.shareMessages || undefined,
+    shareText: CONFIG.shareText,
+    whatsapp: CONFIG.whatsapp,
+    contactName: 'Francesco',
+    contactText: CONFIG.whatsappText,
+    onContact: () => modal.open(),
+  });
+}
 $('#year').textContent = String(new Date().getFullYear());
 boot();

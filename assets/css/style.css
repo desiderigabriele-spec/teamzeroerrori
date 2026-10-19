@@ -602,6 +602,11 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
 .share-x:hover { background: #f2f2f2; border-color: #f2f2f2; }
 .share-native { grid-column: 1 / -1; }
 .share-native:hover { background: var(--green); border-color: var(--green); }
+.shield-contact { display: grid; gap: 8px; padding-top: 14px; border-top: 1px dashed var(--green-line); }
+.shield-contact p { margin: 0; font-size: 14px; color: var(--muted); }
+.shield-wa { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 14px; border-radius: 8px; border: 0; background: #25d366; color: #052e14; font: 800 14.5px var(--mono); text-decoration: none; cursor: pointer; box-shadow: 0 8px 24px rgba(37,211,102,.25); transition: transform .2s var(--ease), box-shadow .2s; }
+.shield-wa::before { content: ""; width: 18px; height: 18px; flex: none; background: currentColor; -webkit-mask: radial-gradient(circle at 50% 46%, #000 54%, transparent 56%) , linear-gradient(135deg, transparent 60%, #000 60%) 0 100% / 7px 7px no-repeat; mask: radial-gradient(circle at 50% 46%, #000 54%, transparent 56%), linear-gradient(135deg, transparent 60%, #000 60%) 0 100% / 7px 7px no-repeat; }
+.shield-wa:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(37,211,102,.4); color: #021a0b; }
 .shield-close { justify-self: center; background: none; border: 0; color: var(--muted); font: 600 14px var(--mono); cursor: pointer; padding: 6px; }
 .shield-close:hover { color: var(--green); }
 @media print {
