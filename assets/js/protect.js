@@ -152,6 +152,7 @@ export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '', wh
   // pressione lunga su touch (iPhone non genera "contextmenu")
   const INTERACTIVE = 'a, button, label, summary, [role="button"], .shield, .modal, .ba, .fab';
   let pressTimer = 0;
+  let pressStart = 0;
   let startX = 0;
   let startY = 0;
   const cancelPress = () => { clearTimeout(pressTimer); pressTimer = 0; };
@@ -160,15 +161,23 @@ export function initProtection({ messages = DEFAULT_MESSAGES, shareText = '', wh
     if (e.touches.length !== 1 || isEditable(t) || (t.closest && t.closest(INTERACTIVE))) return;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
+    pressStart = Date.now();
     cancelPress();
-    pressTimer = setTimeout(() => { pressTimer = 0; open('copy'); }, 600);
+    pressTimer = setTimeout(() => { pressTimer = 0; open('copy'); }, 450);
   }, { passive: true });
   document.addEventListener('touchmove', (e) => {
     if (!pressTimer) return;
     const t = e.touches[0];
     if (Math.hypot(t.clientX - startX, t.clientY - startY) > 10) cancelPress();
   }, { passive: true });
-  ['touchend', 'touchcancel', 'scroll'].forEach((type) => window.addEventListener(type, cancelPress, { passive: true }));
+  // iOS annulla il tocco quando parte il suo gesto di pressione lunga:
+  // se il dito era fermo da abbastanza tempo, conta come pressione lunga
+  document.addEventListener('touchcancel', () => {
+    const wasPress = pressTimer && Date.now() - pressStart > 300;
+    cancelPress();
+    if (wasPress) open('copy');
+  }, { passive: true });
+  ['touchend', 'scroll'].forEach((type) => window.addEventListener(type, cancelPress, { passive: true }));
 
   // filigrana sui dispositivi touch: ogni screenshot porta con sé nome e indirizzo
   if (window.matchMedia('(pointer: coarse)').matches) {
