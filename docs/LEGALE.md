@@ -64,7 +64,7 @@
 
 - **Informativa** (art. 13 GDPR) in `legal/privacy.html`: titolare, finalità, basi giuridiche, tempi di conservazione, destinatari, trasferimenti extra UE, diritti. **Compilate i segnaposto e l'elenco dei fornitori.**
 - **Form di contatto**: la richiesta di essere ricontattati si basa su misure precontrattuali (art. 6.1.b). Il consenso al **marketing** è separato, facoltativo e non preselezionato (art. 6.1.a e art. 130 Codice privacy).
-- **Cookie**: il sito non usa cookie di profilazione né servizi di terze parti. Three.js è ospitato in locale, non c'è Google Fonts né CDN, quindi nessun indirizzo IP viene inviato a terzi. Usa solo due chiavi tecniche in local/sessionStorage, quindi **non serve un banner** (Linee guida Garante del 10 giugno 2021).
+- **Cookie**: il sito non usa cookie di profilazione né servizi di terze parti caricati in automatico, e non usa Google Fonts né CDN. L'unico servizio esterno è il **prezzo live di TradingView**, che si carica solo dopo il clic e la conferma del visitatore (consenso esplicito, scelta ricordata in localStorage). Per questo **non serve un banner generale** (Linee guida Garante del 10 giugno 2021); la cookie policy descrive il widget.
   → Se aggiungete **Meta Pixel, TikTok Pixel, Google Analytics, Hotjar, video embed**: servono un banner conforme (pulsante "Rifiuta" con la stessa evidenza di "Accetta", nessun tracciamento prima del consenso) e l'aggiornamento della cookie policy.
 - **Community e chat** (Telegram, WhatsApp, Discord): indicatele nell'informativa come strumenti usati.
 
@@ -97,6 +97,10 @@ Dal 28 giugno 2025 i servizi di e-commerce verso i consumatori devono essere acc
 - [ ] Mettere per iscritto le regole interne su one-to-one, chat e community (§1) e farle firmare a tutto il team.
 - [ ] Nei video TikTok di promozione del corso: indicazione "#adv", nessuna promessa di guadagno.
 - [ ] Preparare il checkout con: informazioni precontrattuali, casella per la rinuncia al recesso sui contenuti digitali, email di conferma, pulsante "Paga ora".
+- [ ] Registro operazioni (`CONFIG.trades`): solo dati reali e completi, perdite incluse; indicare se il conto è demo o reale.
+- [ ] Posti one-to-one (`CONFIG.slots`): solo numeri reali e aggiornati.
+- [ ] Manifesto: testo approvato da Filippo e firma reale.
+- [ ] Tempo di risposta nel pulsante chat (`CONFIG.responseTime`): solo se il team riesce davvero a rispettarlo.
 - [ ] Revisione finale di un avvocato.
 
 ## Fonti consultate

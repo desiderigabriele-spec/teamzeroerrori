@@ -1,5 +1,7 @@
 # Strategia: psicologia, neuromarketing e percorso dell'utente
 
+> **Versione 3 (attuale).** Il lingotto 3D è stato tolto e sono state inserite tutte le 24 idee della pagina di proposte: pioggia Matrix che reagisce al cursore, titoli che si decodificano, barra SYNC, bottoni oro magnetici, transizione glitch delle sezioni, grafico a candele con le 4 conferme, countdown reale alla candela da 15 minuti, prezzo live (su consenso), titolo digitato, log degli errori, slider prima/dopo, conferme "censurate", mini-gioco "Entreresti?", simulatore dei 5 stop, numeri reali animati, backtest, registro pubblico delle operazioni, "Cosa NON facciamo", manifesto firmato, badge di garanzia, quiz e interruttore dei percorsi, posti one-to-one (solo con dati reali), dossier del team con foto, FAQ in forma di chat, chiusura con input da terminale e pulsante fisso "Scrivi a Francesco".
+
 > **Aggiornamento, versione 2 (semplificata).** Dopo il primo feedback ("troppo confusionario") il sito è stato ridotto all'essenziale. Ordine attuale: **Hero → Come funziona (3 passi) → Il metodo (4 conferme) → Gestione del rischio → Backtest → Percorsi → Chi siamo → FAQ → Richiesta**.
 > Abbiamo tolto il log degli errori, il confronto ECG, il quiz, il telefono "live", il cursore personalizzato, l'HUD e le scanline. La scena 3D compare solo in apertura e in chiusura, il testo è in un font sans-serif leggibile e i titoli restano in monospace. I principi descritti sotto restano validi; le sezioni rimosse si possono reintrodurre in futuro, una alla volta, misurando l'effetto.
 

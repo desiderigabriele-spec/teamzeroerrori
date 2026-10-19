@@ -1,5 +1,6 @@
-// Pioggia di caratteri stile Matrix, con colonne "oro" occasionali
-// e un burst dorato quando il sistema emette un segnale (4/4 conferme).
+// Pioggia di caratteri stile Matrix, con colonne "oro" occasionali,
+// un burst dorato quando il sistema emette un segnale (4/4 conferme)
+// e caratteri che si accendono d'oro vicino al cursore (o al dito).
 
 const GLYPHS = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワン0123456789XAUSD$€▲▼<>/{}[]=+*';
 
@@ -9,6 +10,11 @@ export function initMatrix(canvas, { reduced = false } = {}) {
   let burstUntil = 0;
   let last = 0;
   let running = true;
+  let px = -999, py = -999;
+  const setPointer = (e) => { px = e.clientX; py = e.clientY; };
+  window.addEventListener('pointermove', setPointer, { passive: true });
+  window.addEventListener('pointerdown', setPointer, { passive: true });
+  document.addEventListener('pointerleave', () => { px = py = -999; });
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -36,7 +42,8 @@ export function initMatrix(canvas, { reduced = false } = {}) {
       const ch = GLYPHS[(Math.random() * GLYPHS.length) | 0];
       const x = i * size;
       const y = drops[i] * size;
-      const isGold = gold[i] || (bursting && Math.random() < 0.6);
+      const near = Math.hypot(x - px, y - py) < 90;
+      const isGold = near || gold[i] || (bursting && Math.random() < 0.6);
       // testa della colonna più luminosa
       ctx.fillStyle = isGold ? '#fff3c4' : '#d6ffe0';
       ctx.fillText(ch, x, y);
@@ -46,7 +53,7 @@ export function initMatrix(canvas, { reduced = false } = {}) {
         drops[i] = 0;
         gold[i] = Math.random() < 0.05;
       }
-      drops[i] += bursting ? 1.6 : 1;
+      drops[i] += bursting || near ? 1.8 : 1;
     }
   }
 

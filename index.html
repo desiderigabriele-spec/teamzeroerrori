@@ -11,13 +11,11 @@
 <meta property="og:type" content="website">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/style.css">
-<link rel="modulepreload" href="assets/vendor/three.module.min.js">
 </head>
 <body class="is-booting">
 
 <a class="skip-link" href="#main">Salta al contenuto</a>
 
-<!-- avvio rapido stile terminale (si vede una sola volta per sessione) -->
 <div id="boot" aria-hidden="true">
   <div class="boot-inner">
     <pre id="boot-log"></pre>
@@ -26,8 +24,7 @@
 </div>
 
 <canvas id="matrix" aria-hidden="true"></canvas>
-<canvas id="scene3d" aria-hidden="true"></canvas>
-<div class="crt" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
 
 <div class="riskbar" role="note">
   <span aria-hidden="true">⚠</span>
@@ -43,12 +40,17 @@
     <ul class="nav-links">
       <li><a href="#come-funziona">Come funziona</a></li>
       <li><a href="#metodo">Il metodo</a></li>
+      <li><a href="#trasparenza">Trasparenza</a></li>
       <li><a href="#percorsi">Percorsi</a></li>
       <li><a href="#team">Chi siamo</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
   </nav>
-  <a href="#percorsi" class="btn btn-gold btn-sm">Scegli il percorso</a>
+  <div class="nav-right">
+    <span class="sync-n" aria-hidden="true">SYNC <b id="sync-n">000</b>%</span>
+    <a href="#percorsi" class="btn btn-gold btn-sm" data-magnetic>Scegli il percorso</a>
+  </div>
+  <div class="sync" aria-hidden="true"><span id="sync"></span></div>
 </header>
 
 <main id="main">
@@ -58,7 +60,7 @@
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">Corso di trading sull'oro · XAU/USD</p>
-      <h1 class="hero-title">Entra solo quando si accendono <span class="gold">4 conferme.</span></h1>
+      <h1 class="hero-title" id="hero-title" aria-label="Entra solo quando si accendono 4 conferme.">Entra solo quando si accendono <span class="gold">4 conferme.</span></h1>
       <p class="hero-sub">
         Un metodo semplice e ripetibile per fare trading sull'oro. L'indicatore su TradingView ti mostra quando 4 condizioni si allineano, il corso ti spiega perché. Lavori sul grafico a 15 minuti e rischi l'1% a operazione.
       </p>
@@ -69,24 +71,35 @@
         <li>Community + supporto in chat</li>
       </ul>
       <div class="cta-row">
-        <a href="#percorsi" class="btn btn-gold">Scegli il tuo percorso →</a>
+        <a href="#percorsi" class="btn btn-gold" data-magnetic>Scegli il tuo percorso →</a>
         <a href="#come-funziona" class="btn btn-ghost">Come funziona</a>
       </div>
     </div>
 
     <div class="hero-side">
-      <div class="term term-confirm">
-        <div class="term-bar"><i></i><i></i><i></i><span>indicatore 4 conferme · XAU/USD 15m</span></div>
-        <div class="term-body">
-          <ol class="confirms" id="hero-confirms">
-            <li><span class="led"></span>Conferma 1 <b>attesa</b></li>
-            <li><span class="led"></span>Conferma 2 <b>attesa</b></li>
-            <li><span class="led"></span>Conferma 3 <b>attesa</b></li>
-            <li><span class="led"></span>Conferma 4 <b>attesa</b></li>
-          </ol>
-          <div class="signal" id="hero-signal"><span class="signal-state">IN ATTESA</span></div>
-          <p class="term-note">Esempio animato. Finché manca una conferma, non si opera.</p>
+      <div class="term chart-card">
+        <div class="term-bar"><i></i><i></i><i></i><span>XAU/USD · 15m · indicatore 4 conferme</span></div>
+        <div class="ticker">
+          <span class="tk-dot" aria-hidden="true"></span>
+          <span class="tk-sym">XAU/USD</span>
+          <span id="tk-live" class="tk-live"><button type="button" class="tk-btn" id="tk-btn">Mostra prezzo live</button></span>
         </div>
+        <div class="chart-wrap">
+          <canvas id="chart" height="260" aria-hidden="true"></canvas>
+          <span class="chart-tag">SIMULAZIONE</span>
+          <div class="chart-hud" id="chart-hud" aria-hidden="true">
+            <span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span>
+            <span class="hud-state" id="chart-state">0/4 · si aspetta</span>
+          </div>
+        </div>
+        <div class="clock">
+          <svg class="ring" viewBox="0 0 80 80" aria-hidden="true"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fg" id="clock-ring" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"/></svg>
+          <div>
+            <div class="clock-t" id="clock">--:--</div>
+            <p>alla chiusura della prossima candela da 15 minuti</p>
+          </div>
+        </div>
+        <p class="tk-note" id="tk-note" hidden>Il prezzo live viene caricato da TradingView, un servizio esterno che può usare cookie. <button type="button" class="link-btn" id="tk-ok">Carica</button> · <button type="button" class="link-btn" id="tk-no">Annulla</button></p>
       </div>
     </div>
   </div>
@@ -97,13 +110,13 @@
   <div class="wrap">
     <div class="head" data-reveal>
       <p class="eyebrow">Come funziona</p>
-      <h2>Tre passi, in quest'ordine.</h2>
+      <h2 data-scramble>Tre passi, in quest'ordine.</h2>
     </div>
     <ol class="steps">
       <li class="step" data-reveal>
         <span class="step-n">01</span>
         <h3>Scegli il percorso</h3>
-        <p><b>Recluta</b> se parti da zero, <b>Operatore</b> se fai trading da 1–2 anni. Non sai quale? Ti aiutiamo noi a scegliere.</p>
+        <p><b>Recluta</b> se parti da zero, <b>Operatore</b> se fai trading da 1–2 anni. Non sai quale? Fai il test in 3 domande più sotto.</p>
       </li>
       <li class="step" data-reveal>
         <span class="step-n">02</span>
@@ -119,13 +132,51 @@
   </div>
 </section>
 
+<!-- ================= PROBLEMA ================= -->
+<section id="problema" class="section">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <p class="eyebrow">Il problema</p>
+      <h2 data-scramble>Ti riconosci in questi errori?</h2>
+      <p class="lead">Clicca quelli che hai già fatto almeno una volta. Nessuno ti vede.</p>
+    </div>
+    <div class="two-col prob-grid">
+      <div class="term" data-reveal>
+        <div class="term-bar"><i></i><i></i><i></i><span>log_errori.txt</span></div>
+        <ul class="errlog" id="errlog">
+          <li><button type="button" aria-pressed="false"><span class="t">[ERR-01]</span> Entro perché "sembra che salga"</button></li>
+          <li><button type="button" aria-pressed="false"><span class="t">[ERR-02]</span> Sposto lo stop loss "solo stavolta"</button></li>
+          <li><button type="button" aria-pressed="false"><span class="t">[ERR-03]</span> 30 operazioni al giorno sul grafico a 1 minuto</button></li>
+          <li><button type="button" aria-pressed="false"><span class="t">[ERR-04]</span> Raddoppio la size per recuperare una perdita</button></li>
+          <li><button type="button" aria-pressed="false"><span class="t">[ERR-05]</span> Cambio strategia ogni settimana</button></li>
+        </ul>
+        <div class="err-meter"><div class="err-bar"><span id="err-bar"></span></div><p id="err-msg">Clicca gli errori che hai già fatto.</p></div>
+      </div>
+      <div data-reveal>
+        <div class="term">
+          <div class="term-bar"><i></i><i></i><i></i><span>prima / dopo · trascina la linea</span></div>
+          <div class="ba" id="ba">
+            <canvas class="ba-a" id="ba-a" aria-hidden="true"></canvas>
+            <canvas class="ba-b" id="ba-b" aria-hidden="true"></canvas>
+            <span class="ba-lbl ba-l">PRIMA · 1 minuto, entrate a caso</span>
+            <span class="ba-lbl ba-r">DOPO · 15 minuti, 1 setup 4/4</span>
+            <div class="ba-line" id="ba-line"></div>
+            <input type="range" min="0" max="100" value="50" id="ba-r" aria-label="Confronta prima e dopo">
+          </div>
+        </div>
+        <p class="fine">Grafici illustrativi, non risultati reali.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= IL METODO ================= -->
 <section id="metodo" class="section">
   <div class="wrap">
     <div class="head" data-reveal>
       <p class="eyebrow">Il metodo · Strategia Oro 20/70</p>
-      <h2>Una sola regola: <span class="gold">4 su 4</span>, altrimenti niente.</h2>
-      <p class="lead">L'indicatore resta in silenzio per la maggior parte del tempo. Si accende solo quando 4 condizioni indipendenti si verificano nello stesso momento. Quali sono le 4 conferme, e perché funzionano insieme, lo impari nel corso.</p>
+      <h2 data-scramble>Una sola regola: 4 su 4.</h2>
+      <p class="lead">L'indicatore resta in silenzio per la maggior parte del tempo. Si accende solo quando 4 condizioni indipendenti si verificano nello stesso momento. Quali sono, e perché funzionano insieme, lo impari nel corso.</p>
     </div>
 
     <div class="metodo-visual" id="metodo-visual" data-reveal>
@@ -137,29 +188,30 @@
         <circle class="cross-pt" cx="300" cy="100" r="9"/>
       </svg>
       <ol class="conf-grid">
-        <li class="conf"><span class="conf-n">1</span><span>Conferma 1</span></li>
-        <li class="conf"><span class="conf-n">2</span><span>Conferma 2</span></li>
-        <li class="conf"><span class="conf-n">3</span><span>Conferma 3</span></li>
-        <li class="conf"><span class="conf-n">4</span><span>Conferma 4</span></li>
+        <li class="conf" tabindex="0"><b><span class="conf-n">1</span> Conferma 1</b><span class="bar">████████ ████ █████</span><span class="lock">🔒 riservata agli iscritti</span></li>
+        <li class="conf" tabindex="0"><b><span class="conf-n">2</span> Conferma 2</b><span class="bar">█████ ██████████ ██</span><span class="lock">🔒 riservata agli iscritti</span></li>
+        <li class="conf" tabindex="0"><b><span class="conf-n">3</span> Conferma 3</b><span class="bar">███████ ███ ██████</span><span class="lock">🔒 riservata agli iscritti</span></li>
+        <li class="conf" tabindex="0"><b><span class="conf-n">4</span> Conferma 4</b><span class="bar">████ ████████ ████</span><span class="lock">🔒 riservata agli iscritti</span></li>
       </ol>
       <p class="cross-label" id="cross-label">0 su 4 · si aspetta</p>
     </div>
 
     <div class="facts">
-      <div class="fact" data-reveal>
-        <span class="fact-v">15 min</span>
-        <h3>Timeframe rilassato</h3>
-        <p>Niente scalping di pochi minuti. Hai il tempo di ragionare, poi chiudi il grafico.</p>
-      </div>
-      <div class="fact" data-reveal>
-        <span class="fact-v">1%</span>
-        <h3>Rischio fisso</h3>
-        <p>Su ogni operazione rischi l'1% del conto. Una serie di stop non ti butta fuori.</p>
-      </div>
-      <div class="fact" data-reveal>
-        <span class="fact-v">1:3 – 1:5</span>
-        <h3>Rapporto rischio/rendimento</h3>
-        <p>Per ogni euro rischiato, l'obiettivo è 3–5 euro. Non sempre il target viene raggiunto.</p>
+      <div class="fact" data-reveal><span class="fact-v">15 min</span><h3>Timeframe rilassato</h3><p>Niente scalping di pochi minuti. Hai il tempo di ragionare, poi chiudi il grafico.</p></div>
+      <div class="fact" data-reveal><span class="fact-v">1%</span><h3>Rischio fisso</h3><p>Su ogni operazione rischi l'1% del conto. Una serie di stop non ti butta fuori.</p></div>
+      <div class="fact" data-reveal><span class="fact-v">1:3 – 1:5</span><h3>Rischio/rendimento</h3><p>Per ogni euro rischiato, l'obiettivo è 3–5 euro. Non sempre il target viene raggiunto.</p></div>
+    </div>
+
+    <div class="term game" id="game" data-reveal>
+      <div class="term-bar"><i></i><i></i><i></i><span>mettiti alla prova · entreresti?</span></div>
+      <div class="term-body">
+        <div class="game-top">
+          <div class="game-leds" id="game-leds"><span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span></div>
+          <span class="game-n" id="game-n">Situazione 1 di 3</span>
+        </div>
+        <p class="game-q">Le spie qui sopra sono le conferme accese. Entreresti in questa operazione?</p>
+        <div class="game-btns"><button type="button" class="btn btn-gold btn-sm" data-a="in">Entro</button><button type="button" class="btn btn-ghost btn-sm" data-a="wait">Aspetto</button></div>
+        <p class="game-fb" id="game-fb" aria-live="polite"></p>
       </div>
     </div>
   </div>
@@ -170,8 +222,8 @@
   <div class="wrap two-col">
     <div data-reveal>
       <p class="eyebrow">Gestione del rischio</p>
-      <h2>Prima pensi a quanto puoi perdere.</h2>
-      <p class="lead">Inserisci il capitale del tuo conto e guarda come funziona la regola dell'1%.</p>
+      <h2 data-scramble>Prima pensi a quanto puoi perdere.</h2>
+      <p class="lead">Inserisci il capitale del tuo conto e guarda come funziona la regola dell'1%. Poi prova a simulare 5 operazioni in perdita di fila.</p>
       <p class="fine">Esempio aritmetico, non una previsione. Spread, commissioni e slippage riducono i risultati.</p>
     </div>
     <div class="term" data-reveal>
@@ -187,43 +239,96 @@
           <div><dt>Se si chiude in stop</dt><dd class="red" id="o-loss">−15,00 €</dd></div>
           <div><dt>Se raggiunge il target 1:3</dt><dd class="g" id="o-t3">+45,00 €</dd></div>
           <div><dt>Se raggiunge il target 1:5</dt><dd class="gold" id="o-t5">+75,00 €</dd></div>
-          <div><dt>Dopo 5 stop di fila</dt><dd id="o-stress">1.426,49 €</dd></div>
         </dl>
+        <div class="drain">
+          <div class="drain-row"><span>Conto: <b id="d-cap">1.500,00 €</b></span><span>Stop: <b id="d-n">0</b>/5</span></div>
+          <div class="drain-bar"><span id="d-bar"></span></div>
+          <button type="button" class="btn btn-ghost btn-sm" id="d-btn">Simula 5 stop di fila</button>
+          <p class="drain-msg" id="d-msg">Con il 10% a operazione, dopo 5 stop resteresti con il 59% del conto.</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ================= BACKTEST ================= -->
-<section id="backtest" class="section">
-  <div class="wrap two-col">
-    <div class="term term-bt" data-reveal>
-      <div class="term-bar"><i></i><i></i><i></i><span>backtest su TradingView</span></div>
-      <div class="term-body">
-        <div class="gauge">
-          <svg viewBox="0 0 200 120" aria-hidden="true">
-            <path class="gauge-bg" d="M20,110 A80,80 0 0 1 180,110"/>
-            <path class="gauge-fg" id="gauge-fg" d="M20,110 A80,80 0 0 1 180,110"/>
-          </svg>
-          <div class="gauge-val"><span data-count="3.5" data-decimals="1">0.0</span><small>Profit Factor</small></div>
+<!-- ================= TRASPARENZA ================= -->
+<section id="trasparenza" class="section">
+  <div class="wrap">
+    <div class="head" data-reveal>
+      <p class="eyebrow">Trasparenza</p>
+      <h2 data-scramble>Non fidarti. Verifica.</h2>
+      <p class="lead">Numeri reali, backtest pubblico e tutte le operazioni, anche quelle in perdita.</p>
+    </div>
+
+    <div class="stats" id="stats" data-reveal>
+      <div class="stat"><b data-to="12">12</b><span>video lezioni</span></div>
+      <div class="stat"><b data-to="5">5</b><span>sessioni one-to-one</span></div>
+      <div class="stat"><b data-to="45">45</b><span>minuti a sessione</span></div>
+      <div class="stat"><b data-to="4">4</b><span>conferme richieste</span></div>
+      <div class="stat"><b data-to="15">15</b><span>minuti di timeframe</span></div>
+    </div>
+
+    <div class="two-col bt-grid">
+      <div class="term" data-reveal>
+        <div class="term-bar"><i></i><i></i><i></i><span>backtest su TradingView</span></div>
+        <div class="term-body">
+          <div class="gauge">
+            <svg viewBox="0 0 200 120" aria-hidden="true">
+              <path class="gauge-bg" d="M20,110 A80,80 0 0 1 180,110"/>
+              <path class="gauge-fg" id="gauge-fg" d="M20,110 A80,80 0 0 1 180,110"/>
+            </svg>
+            <div class="gauge-val"><span data-count="3.5" data-decimals="1">3.5</span><small>Profit Factor</small></div>
+          </div>
+          <dl class="specs">
+            <div><dt>Strumento</dt><dd>Oro (XAU/USD)</dd></div>
+            <div><dt>Timeframe</dt><dd>15 minuti</dd></div>
+            <div><dt>Periodo</dt><dd>luglio 2026 → oggi</dd></div>
+          </dl>
+          <a class="btn btn-ghost btn-block" id="tv-link" href="#" target="_blank" rel="noopener">Vedi il backtest su TradingView ↗</a>
         </div>
-        <dl class="specs">
-          <div><dt>Strumento</dt><dd>Oro (XAU/USD)</dd></div>
-          <div><dt>Timeframe</dt><dd>15 minuti</dd></div>
-          <div><dt>Periodo</dt><dd>luglio 2026 → oggi</dd></div>
-        </dl>
-        <a class="btn btn-ghost btn-block" id="tv-link" href="#" target="_blank" rel="noopener">Vedi il backtest su TradingView ↗</a>
+      </div>
+      <div class="term tlog-card" data-reveal>
+        <div class="term-bar"><i></i><i></i><i></i><span>registro pubblico delle operazioni</span></div>
+        <div class="term-body">
+          <p class="tlog-intro">Tutte le operazioni del metodo, <b>perdite comprese</b>, in multipli del rischio (R). Aggiornato ogni settimana.</p>
+          <p class="tlog-example" id="tlog-example" hidden>ESEMPIO DI FORMATO · i dati reali verranno pubblicati qui</p>
+          <div class="tlog">
+            <table>
+              <thead><tr><th>Data</th><th>Direzione</th><th>Conferme</th><th>Esito</th></tr></thead>
+              <tbody id="tlog"></tbody>
+              <tfoot><tr><td colspan="3" id="tlog-tot-l">Totale</td><td id="tlog-tot"></td></tr></tfoot>
+            </table>
+          </div>
+          <p class="fine" id="tlog-note">Il backtest è una simulazione su un periodo breve. I risultati passati non garantiscono quelli futuri.</p>
+        </div>
       </div>
     </div>
-    <div data-reveal>
-      <p class="eyebrow">Trasparenza</p>
-      <h2>Non fidarti. <span class="gold">Verifica.</span></h2>
-      <p class="lead">Il backtest del metodo è pubblicato su TradingView. Il Profit Factor è 3.5: nel periodo testato, per ogni euro perso il sistema ne ha guadagnati 3,5.</p>
-      <ul class="plain-list warn">
-        <li>È una <b>simulazione</b>, non il risultato di un conto reale.</li>
-        <li>Il periodo è <b>breve</b>: pochi mesi.</li>
-        <li>I risultati passati <b>non garantiscono</b> quelli futuri.</li>
-      </ul>
+
+    <div class="two-col trust-grid">
+      <div class="term" data-reveal>
+        <div class="term-bar"><i></i><i></i><i></i><span>cosa_non_facciamo.txt</span></div>
+        <div class="term-body">
+          <ul class="nots" id="nots">
+            <li>Segnali da copiare a occhi chiusi</li>
+            <li>Promesse di guadagno</li>
+            <li>Gestione dei tuoi soldi</li>
+            <li>Countdown e "ultimi posti" finti</li>
+          </ul>
+          <p class="nots-yes">→ Ti insegniamo un metodo. Le decisioni restano tue.</p>
+        </div>
+      </div>
+      <div class="manifesto" id="manifesto" data-reveal>
+        <!-- TODO: testo da far approvare a Filippo e firma reale (SVG) al posto di quella di esempio -->
+        <blockquote>"Ho creato questo metodo per smettere di operare d'istinto. Non ti prometto guadagni: ti prometto regole chiare, e risponderò io di quello che insegno."</blockquote>
+        <svg class="signature" viewBox="0 0 240 70" aria-hidden="true"><path d="M8,48 C20,20 32,14 36,30 C40,46 26,58 22,44 C18,30 44,22 54,36 C60,46 62,30 70,30 C78,30 74,48 84,44 C94,40 92,24 102,26 C112,28 104,50 116,46 C128,42 130,20 140,22 C152,24 140,54 156,48 C170,42 176,30 190,34 C204,38 214,40 232,30"/></svg>
+        <p class="sign-name">Filippo Danesi · ideatore del metodo</p>
+      </div>
+    </div>
+
+    <div class="badges" data-reveal>
+      <div class="badge" tabindex="0"><div class="badge-in"><div class="face"><b>RECESSO 14 GIORNI</b><span>passa sopra o tocca</span></div><div class="face back"><span>Per legge puoi recedere entro 14 giorni, alle condizioni dei <a href="legal/termini.html">Termini</a>.</span></div></div></div>
+      <div class="badge" tabindex="0"><div class="badge-in"><div class="face"><b>ZERO PROMESSE</b><span>passa sopra o tocca</span></div><div class="face back"><span>Nessun guadagno garantito. Diffida di chi te lo promette.</span></div></div></div>
+      <div class="badge" tabindex="0"><div class="badge-in"><div class="face"><b>PERSONE REALI</b><span>passa sopra o tocca</span></div><div class="face back"><span>Nomi, volti e ruoli del team, raggiungibili in chat.</span></div></div></div>
     </div>
   </div>
 </section>
@@ -233,10 +338,26 @@
   <div class="wrap">
     <div class="head" data-reveal>
       <p class="eyebrow">Percorsi</p>
-      <h2>Scegli in base alla tua esperienza.</h2>
+      <h2 data-scramble>Scegli in base alla tua esperienza.</h2>
     </div>
-    <div class="plans">
-      <article class="term plan" data-reveal>
+
+    <div class="plan-tools" data-reveal>
+      <div class="term quiz">
+        <div class="term-bar"><i></i><i></i><i></i><span>non sai quale scegliere? 3 domande</span></div>
+        <div class="term-body">
+          <p class="quiz-q" id="quiz-q"></p>
+          <div class="quiz-opts" id="quiz-opts"></div>
+          <p class="quiz-res" id="quiz-res" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="toggle" role="group" aria-label="Livello">
+        <button type="button" aria-pressed="true" data-plan="recluta">Principiante</button>
+        <button type="button" aria-pressed="false" data-plan="operatore">Esperto</button>
+      </div>
+    </div>
+
+    <div class="plans" id="plans">
+      <article class="term plan is-on" id="plan-recluta" data-reveal>
         <div class="term-bar"><i></i><i></i><i></i><span>principianti</span></div>
         <div class="term-body">
           <h3>Protocollo <span class="g">Recluta</span></h3>
@@ -249,10 +370,10 @@
             <li>Supporto in chat 24/7, senza scadenza¹</li>
           </ul>
           <p class="price" data-price="recluta">Prezzo su richiesta</p>
-          <button type="button" class="btn btn-gold btn-block" data-open-form="recluta">Richiedi informazioni</button>
+          <button type="button" class="btn btn-gold btn-block" data-open-form="recluta" data-magnetic>Richiedi informazioni</button>
         </div>
       </article>
-      <article class="term plan" data-reveal>
+      <article class="term plan" id="plan-operatore" data-reveal>
         <div class="term-bar"><i></i><i></i><i></i><span>esperti</span></div>
         <div class="term-body">
           <h3>Protocollo <span class="gold">Operatore</span></h3>
@@ -265,10 +386,16 @@
             <li>Supporto in chat 24/7, senza scadenza¹</li>
           </ul>
           <p class="price" data-price="operatore">Prezzo su richiesta</p>
-          <button type="button" class="btn btn-gold btn-block" data-open-form="operatore">Richiedi informazioni</button>
+          <button type="button" class="btn btn-gold btn-block" data-open-form="operatore" data-magnetic>Richiedi informazioni</button>
         </div>
       </article>
     </div>
+
+    <div class="slots" id="slots" hidden data-reveal>
+      <div class="slot-row" id="slot-row" aria-hidden="true"></div>
+      <p id="slot-text"></p>
+    </div>
+
     <p class="fine center">¹ Puoi scriverci quando vuoi; il supporto resta attivo finché Team Zero Errori svolge la sua attività, con i tempi indicati nei <a href="legal/termini.html">Termini</a>. Le sessioni one-to-one sono formative, non consulenza finanziaria personalizzata.</p>
   </div>
 </section>
@@ -278,81 +405,81 @@
   <div class="wrap">
     <div class="head" data-reveal>
       <p class="eyebrow">Chi siamo</p>
-      <h2>Tre persone, ognuna con un ruolo.</h2>
+      <h2 data-scramble>Tre persone, ognuna con un ruolo.</h2>
     </div>
     <div class="team-grid">
-      <article class="term team-card" data-reveal>
+      <article class="term dossier" data-reveal data-dossier="nome: Francesco Zammartino|ruolo: CEO · assistenza clienti|compito: risponde a te, dalla prima domanda all'ultima sessione|stato: ● online">
+        <div class="term-bar"><i></i><i></i><i></i><span>~/team/francesco</span></div>
         <div class="term-body">
-          <div class="avatar" aria-hidden="true">FZ</div>
-          <h3>Francesco Zammartino</h3>
-          <p class="role">CEO · Assistenza clienti</p>
-          <p>È la persona che ti risponde, dalla prima domanda all'ultima sessione.</p>
+          <div class="photo" data-photo="francesco"><span>FZ</span></div>
+          <p class="prompt-sm">$ whoami</p>
+          <pre class="dossier-out">nome: Francesco Zammartino
+ruolo: CEO · assistenza clienti
+compito: risponde a te, dalla prima domanda all'ultima sessione
+stato: ● online</pre>
         </div>
       </article>
-      <article class="term team-card" data-reveal>
+      <article class="term dossier" data-reveal data-dossier="nome: Filippo Danesi|ruolo: ideatore del metodo · parte tecnica|compito: ha creato la Strategia Oro 20/70 e l'indicatore delle 4 conferme|stato: ● online">
+        <div class="term-bar"><i></i><i></i><i></i><span>~/team/filippo</span></div>
         <div class="term-body">
-          <div class="avatar gold-av" aria-hidden="true">FD</div>
-          <h3>Filippo Danesi</h3>
-          <p class="role">Ideatore del metodo · Parte tecnica</p>
-          <p>Ha creato la Strategia Oro 20/70 e l'indicatore delle 4 conferme.</p>
+          <div class="photo gold-ph" data-photo="filippo"><span>FD</span></div>
+          <p class="prompt-sm">$ whoami</p>
+          <pre class="dossier-out">nome: Filippo Danesi
+ruolo: ideatore del metodo · parte tecnica
+compito: ha creato la Strategia Oro 20/70 e l'indicatore delle 4 conferme
+stato: ● online</pre>
         </div>
       </article>
-      <article class="term team-card" data-reveal>
+      <article class="term dossier" data-reveal data-dossier="nome: Andrea|ruolo: live su TikTok · @ildiariodiuntrader|compito: applica il metodo in diretta (contenuti formativi)|stato: ● online">
+        <div class="term-bar"><i></i><i></i><i></i><span>~/team/andrea</span></div>
         <div class="term-body">
-          <div class="avatar" aria-hidden="true">A</div>
-          <h3>Andrea</h3>
-          <p class="role">Live su TikTok</p>
-          <p>Applica il metodo in diretta su <a href="https://www.tiktok.com/@ildiariodiuntrader" target="_blank" rel="noopener">@ildiariodiuntrader</a>. Le live sono formative: non sono inviti a replicare le operazioni.</p>
+          <div class="photo" data-photo="andrea"><span>A</span></div>
+          <p class="prompt-sm">$ whoami</p>
+          <pre class="dossier-out">nome: Andrea
+ruolo: live su TikTok · @ildiariodiuntrader
+compito: applica il metodo in diretta (contenuti formativi)
+stato: ● online</pre>
+          <a class="tt-link" href="https://www.tiktok.com/@ildiariodiuntrader" target="_blank" rel="noopener">Segui su TikTok ↗</a>
         </div>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ================= FAQ ================= -->
+<!-- ================= FAQ (chat) ================= -->
 <section id="faq" class="section">
   <div class="wrap narrow">
     <div class="head" data-reveal>
       <p class="eyebrow">Domande frequenti</p>
-      <h2>Risposte dirette.</h2>
+      <h2 data-scramble>Chiedilo a Francesco.</h2>
+      <p class="lead">Tocca una domanda: la risposta arriva come in chat.</p>
     </div>
-    <div class="faq" data-reveal>
-      <details>
-        <summary>Mi garantite che guadagnerò?</summary>
-        <p>No, e diffida di chi lo fa. Il trading comporta un rischio reale di perdere denaro. Ti diamo un metodo con regole chiare, uno strumento per rispettarle e persone che ti seguono.</p>
-      </details>
-      <details>
-        <summary>È consulenza finanziaria?</summary>
-        <p>No. Facciamo formazione: non siamo consulenti finanziari autorizzati, non gestiamo il tuo denaro e non ti diciamo cosa fare sul tuo conto. Le decisioni restano tue.</p>
-      </details>
-      <details>
-        <summary>Cos'è l'indicatore?</summary>
-        <p>È uno script per TradingView che evidenzia quando le 4 condizioni del metodo si verificano insieme. Non opera al posto tuo. Serve un account TradingView: ti aiutiamo noi ad attivarlo.</p>
-      </details>
-      <details>
-        <summary>Quanto capitale serve?</summary>
-        <p>Il metodo ragiona in percentuale (1% per operazione), quindi si adatta a conti diversi. Consigliamo di fare pratica prima su un conto demo e di usare solo denaro che puoi permetterti di perdere.</p>
-      </details>
-      <details>
-        <summary>Quanto tempo richiede?</summary>
-        <p>Lavoriamo sul grafico a 15 minuti: non serve stare davanti allo schermo tutto il giorno.</p>
-      </details>
-      <details>
-        <summary>Posso recedere dopo l'acquisto?</summary>
-        <p>Hai 14 giorni, salvo che tu chieda di accedere subito ai contenuti digitali accettando di perdere il recesso. I dettagli sono nei <a href="legal/termini.html">Termini</a>.</p>
-      </details>
+    <div class="term chat" data-reveal>
+      <div class="term-bar"><i></i><i></i><i></i><span>chat · Francesco Zammartino</span></div>
+      <div class="term-body">
+        <div class="chat-log" id="chat-log" aria-live="polite"></div>
+        <div class="chat-qs" id="chat-qs"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ================= CTA FINALE ================= -->
+<!-- ================= CHIUSURA ================= -->
 <section id="accesso" class="section final">
   <div class="wrap narrow center" data-reveal>
-    <h2 class="final-title">Il prossimo setup arriverà comunque.<br><span class="gold">Lo riconoscerai?</span></h2>
-    <p class="lead">Lasciaci i tuoi contatti: Francesco ti richiama, capisce il tuo livello e ti consiglia il percorso giusto. Nessun pagamento in questa fase.</p>
-    <div class="cta-row center">
-      <button type="button" class="btn btn-gold btn-lg" data-open-form="">Richiedi informazioni →</button>
+    <h2 class="final-title" data-scramble>Il prossimo setup arriverà comunque.</h2>
+    <p class="final-sub gold">Lo riconoscerai?</p>
+    <div class="term tin">
+      <div class="term-body">
+        <label for="tin-name">&gt; come ti chiami, operatore?</label>
+        <div class="tin-row">
+          <input id="tin-name" autocomplete="given-name" placeholder="scrivi il tuo nome e premi Invio">
+          <button type="button" class="btn btn-gold btn-sm" id="tin-btn" data-magnetic>Invio</button>
+        </div>
+        <p class="tin-out" id="tin-out" aria-live="polite"></p>
+      </div>
     </div>
+    <p class="lead">Francesco ti richiama, capisce il tuo livello e ti consiglia il percorso giusto. Nessun pagamento in questa fase.</p>
   </div>
 </section>
 
@@ -362,7 +489,7 @@
   <div class="wrap">
     <div class="term term-warn footer-risk">
       <div class="term-body">
-        <p><b>Avvertenza.</b> Il trading su oro, CFD e strumenti a leva comporta un rischio elevato di perdere denaro rapidamente. Team Zero Errori offre solo formazione: non è un intermediario finanziario, non presta consulenza in materia di investimenti (D.Lgs. 58/1998), non gestisce capitali. Nessun contenuto del sito, del corso, della community o delle live è una raccomandazione personalizzata. Il backtest è simulato: i risultati passati non garantiscono quelli futuri.</p>
+        <p><b>Avvertenza.</b> Il trading su oro, CFD e strumenti a leva comporta un rischio elevato di perdere denaro rapidamente. Team Zero Errori offre solo formazione: non è un intermediario finanziario, non presta consulenza in materia di investimenti (D.Lgs. 58/1998), non gestisce capitali. Nessun contenuto del sito, del corso, della community o delle live è una raccomandazione personalizzata. Il backtest è simulato e i grafici animati sono illustrativi: i risultati passati non garantiscono quelli futuri.</p>
       </div>
     </div>
     <div class="footer-grid">
@@ -382,7 +509,13 @@
   </div>
 </footer>
 
-<!-- ================= MODALE ================= -->
+<!-- pulsante chat fisso -->
+<button type="button" class="fab" id="fab" aria-label="Scrivi a Francesco">
+  <span class="fab-av" aria-hidden="true">FZ</span>
+  <span class="fab-txt"><b>Scrivi a Francesco</b><small id="fab-sub">ti risponde una persona</small></span>
+</button>
+
+<!-- modale -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="term modal-term">
