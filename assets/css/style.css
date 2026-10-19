@@ -571,6 +571,20 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
   .nots li::after { transform: scaleX(1); }
 }
 
+/* ---------- protezione dei contenuti ---------- */
+.protect body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.protect input, .protect textarea, .protect select, .protect .allow-copy { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+.protect img, .protect canvas, .protect svg { -webkit-user-drag: none; user-drag: none; }
+.shield { position: fixed; inset: 0; z-index: 500; display: none; place-items: center; text-align: center; padding: 24px; background: #000; color: var(--green); font: 600 16px/1.6 var(--mono); }
+.shield b { color: var(--gold); font-size: 20px; }
+.protect.shielded .shield { display: grid; }
+.protect.shielded main, .protect.shielded .footer, .protect.shielded .nav, .protect.shielded #matrix { filter: blur(24px); }
+@media print {
+  .protect body { background: #fff !important; padding: 0 !important; }
+  .protect body > * { display: none !important; }
+  .protect body::after { content: "La stampa di questa pagina non è consentita."; display: block; padding: 40px; font: 700 18px sans-serif; color: #000; }
+}
+
 /* ---------------- pagine legali ---------------- */
 .legal-page { padding: 50px 0 90px; position: relative; z-index: 2; }
 .legal-page .term-body { padding: clamp(20px, 4vw, 44px); }

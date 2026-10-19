@@ -1,4 +1,5 @@
 import { initMatrix } from './matrix.js';
+import { initProtection } from './protect.js';
 
 // =========================================================
 // CONFIGURAZIONE — da compilare prima della pubblicazione
@@ -23,6 +24,8 @@ const CONFIG = {
   slots: null,
   // TODO: foto reali del team, es. { francesco: 'assets/team/francesco.jpg', ... }
   photos: {},
+  // blocca copia, salvataggio immagini, stampa e scoraggia gli screenshot
+  protectContent: true,
 };
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -852,5 +855,6 @@ if (finePointer && !reduced) {
   });
 }
 
+if (CONFIG.protectContent) initProtection();
 $('#year').textContent = String(new Date().getFullYear());
 boot();

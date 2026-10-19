@@ -13,6 +13,7 @@ index.html                  pagina principale (10 sezioni + modale di richiesta)
 assets/css/style.css        tutto lo stile (palette, terminali, animazioni, responsive)
 assets/js/main.js           tutte le interazioni + CONFIG da compilare
 assets/js/matrix.js         pioggia di caratteri Matrix (reagisce al cursore)
+assets/js/protect.js        protezione dei contenuti (copia, immagini, stampa, screenshot)
 legal/                      avvertenza rischi, termini di vendita, privacy, cookie
 docs/LEGALE.md              ricerca legale, checklist e fonti
 docs/STRATEGIA-MARKETING.md logica di psicologia, neuromarketing e funnel
@@ -39,6 +40,12 @@ Serve un server: aprendo `index.html` con doppio clic, i moduli JavaScript non s
 2. **Dati legali**: sostituisci tutti i segnaposto `[ ... ]` nel footer di `index.html` e nelle pagine in `legal/`.
 3. Leggi **`docs/LEGALE.md`** e completa la checklist. Falla verificare da un avvocato.
 4. Pubblica su qualsiasi hosting statico: GitHub Pages, Netlify, Vercel, oppure un hosting tradizionale.
+
+## Protezione dei contenuti
+
+Con `CONFIG.protectContent: true` la pagina principale blocca selezione e copia del testo, tasto destro, trascinamento e salvataggio delle immagini (anche con pressione lunga su iPhone), stampa e le scorciatoie Ctrl/Cmd+S, P, U, C, A. Quando la finestra perde il focus, la scheda viene nascosta o si preme Stamp, la pagina viene oscurata.
+
+Nessun sito può impedire del tutto gli screenshot (tasti del telefono, strumenti del sistema, foto con un altro dispositivo) né l'accesso al codice sorgente: sono deterrenti. I campi dei moduli e i dati legali nel footer restano copiabili; le pagine in `legal/` restano copiabili e stampabili di proposito, perché il consumatore deve poter conservare le condizioni di vendita.
 
 ## Accessibilità e prestazioni
 
