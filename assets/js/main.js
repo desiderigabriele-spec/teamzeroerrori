@@ -148,7 +148,9 @@ async function typeHeroTitle() {
   const leds = $$('.led', hud);
   const state = $('#chart-state');
   const isVisible = visibility(cv);
-  let c = fitCanvas(cv, 260);
+  const narrator = $('#narrator');
+  const steps = $$('#chart-steps li');
+  let c = fitCanvas(cv, 240);
   const candles = [];
   let price = 100;
   function add(bias = 0) {
@@ -198,30 +200,37 @@ async function typeHeroTitle() {
   function setLeds(n) {
     leds.forEach((l, i) => l.classList.toggle('on', i < n));
     hud.classList.toggle('all', n === 4);
-    state.textContent = n === 4 ? '4/4 · SETUP VALIDO' : `${n}/4 · si aspetta`;
+    state.textContent = n === 4 ? '4 su 4 · SETUP' : `${n} su 4 · aspetta`;
+    // spiegazione in parole semplici, sincronizzata con le spie
+    const step = n === 0 ? 0 : n < 4 ? 1 : 2;
+    steps.forEach((li, i) => li.classList.toggle('is-on', i === step));
+    if (n === 0) narrator.textContent = "Questo è il grafico dell'oro. L'indicatore lo analizza candela per candela.";
+    else if (n < 4) narrator.textContent = `Ogni spia accesa è una delle 4 conferme del metodo. Con ${n} su 4 non si entra: si aspetta.`;
+    else narrator.innerHTML = '<b>4 su 4: compare il segnale SETUP.</b> Solo adesso il metodo prevede di valutare l\'operazione.';
+    narrator.classList.toggle('go', n === 4);
   }
 
   draw();
   setLeds(reduced ? 4 : 0);
-  window.addEventListener('resize', () => { c = fitCanvas(cv, 260); draw(); });
+  window.addEventListener('resize', () => { c = fitCanvas(cv, 240); draw(); });
   if (reduced) return;
   let lit = 0;
   let tick = 0;
   setInterval(() => {
     if (!isVisible() || document.hidden) return;
     tick++;
-    if (lit < 4 && tick % 2 === 0) { lit++; setLeds(lit); }
+    if (lit < 4 && tick % 3 === 0) { lit++; setLeds(lit); }
     add(lit >= 4 ? 0.35 : 0);
     if (lit === 4) {
       candles[candles.length - 1].mark = true;
       lit = 5;
       matrix.burst(1200);
-    } else if (lit === 5 && tick % 9 === 0) {
+    } else if (lit === 5 && tick % 12 === 0) {
       lit = 0;
       setLeds(0);
     }
     draw();
-  }, 650);
+  }, 800);
 })();
 
 // =========================================================

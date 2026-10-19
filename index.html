@@ -77,25 +77,32 @@
 
     <div class="hero-side">
       <div class="term chart-card">
-        <div class="term-bar"><i></i><i></i><i></i><span>XAU/USD · 15m · indicatore 4 conferme</span></div>
+        <div class="term-bar"><i></i><i></i><i></i><span>esempio · come funziona l'indicatore</span></div>
         <div class="ticker">
           <span class="tk-dot" aria-hidden="true"></span>
           <span class="tk-sym">XAU/USD</span>
           <span id="tk-live" class="tk-live"><button type="button" class="tk-btn" id="tk-btn">Mostra prezzo live</button></span>
         </div>
+        <p class="narrator" id="narrator" aria-live="polite">Questo è il grafico dell'oro. L'indicatore lo analizza candela per candela.</p>
         <div class="chart-wrap">
-          <canvas id="chart" height="260" aria-hidden="true"></canvas>
+          <canvas id="chart" height="240" aria-hidden="true"></canvas>
           <span class="chart-tag">SIMULAZIONE</span>
-          <div class="chart-hud" id="chart-hud" aria-hidden="true">
+          <div class="chart-hud" id="chart-hud">
+            <span class="hud-label">Conferme</span>
             <span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span>
-            <span class="hud-state" id="chart-state">0/4 · si aspetta</span>
+            <span class="hud-state" id="chart-state">0 su 4 · aspetta</span>
           </div>
         </div>
+        <ol class="chart-steps" id="chart-steps">
+          <li class="is-on"><b>1</b>Il grafico dell'oro</li>
+          <li><b>2</b>Ogni spia = una conferma</li>
+          <li><b>3</b>4 su 4 = segnale SETUP</li>
+        </ol>
         <div class="clock">
           <svg class="ring" viewBox="0 0 80 80" aria-hidden="true"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fg" id="clock-ring" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"/></svg>
           <div>
+            <p>Ogni candela del grafico vale 15 minuti. La prossima si chiude tra</p>
             <div class="clock-t" id="clock">--:--</div>
-            <p>alla chiusura della prossima candela da 15 minuti</p>
           </div>
         </div>
         <p class="tk-note" id="tk-note" hidden>Il prezzo live viene caricato da TradingView, un servizio esterno che può usare cookie. <button type="button" class="link-btn" id="tk-ok">Carica</button> · <button type="button" class="link-btn" id="tk-no">Annulla</button></p>
