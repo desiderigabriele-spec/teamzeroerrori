@@ -45,7 +45,9 @@ Serve un server: aprendo `index.html` con doppio clic, i moduli JavaScript non s
 
 Con `CONFIG.protectContent: true` la pagina principale blocca selezione e copia del testo, tasto destro, trascinamento e salvataggio delle immagini (anche con pressione lunga su iPhone), stampa e le scorciatoie Ctrl/Cmd+S, P, U, C, A. Quando qualcuno preme Stamp, usa le scorciatoie di screenshot o di registrazione dello schermo (Cmd+Shift+5 su Mac; Win+Alt+R, Win+G, Win+Shift+R su Windows) o prova a copiare, appare un pannello che invita a condividere il link (copia, WhatsApp, Telegram, Facebook, X, condivisione del telefono) e a chiedere info a Francesco su WhatsApp (`CONFIG.whatsapp`; senza numero il bottone apre il modulo di richiesta). I testi del pannello si cambiano in `CONFIG.shareMessages` e `CONFIG.shareText`. Quando la finestra perde il focus o la scheda viene nascosta, la pagina viene oscurata.
 
-Nessun sito può impedire del tutto gli screenshot (tasti del telefono, strumenti del sistema, foto con un altro dispositivo) né l'accesso al codice sorgente: sono deterrenti. I campi dei moduli e i dati legali nel footer restano copiabili; le pagine in `legal/` restano copiabili e stampabili di proposito, perché il consumatore deve poter conservare le condizioni di vendita.
+Su telefono e tablet la pressione lunga su testo o immagini apre lo stesso pannello (rilevata a mano, perché iPhone non la segnala al browser), e una filigrana leggerissima con nome e indirizzo del sito copre la pagina: chi fa uno screenshot si porta dietro il vostro link.
+
+Su iPhone (Safari e Chrome usano lo stesso motore) e Android il browser non riceve alcun segnale quando si fa uno screenshot o una registrazione con i tasti del telefono: nessun sito può rilevarli. Nessun sito può impedire del tutto gli screenshot (tasti del telefono, strumenti del sistema, foto con un altro dispositivo) né l'accesso al codice sorgente: sono deterrenti. I campi dei moduli e i dati legali nel footer restano copiabili; le pagine in `legal/` restano copiabili e stampabili di proposito, perché il consumatore deve poter conservare le condizioni di vendita.
 
 ## Accessibilità e prestazioni
 
