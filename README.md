@@ -43,7 +43,7 @@ Serve un server: aprendo `index.html` con doppio clic, i moduli JavaScript non s
 
 ## Protezione dei contenuti
 
-Con `CONFIG.protectContent: true` la pagina principale blocca selezione e copia del testo, tasto destro, trascinamento e salvataggio delle immagini (anche con pressione lunga su iPhone), stampa e le scorciatoie Ctrl/Cmd+S, P, U, C, A. Quando la finestra perde il focus, la scheda viene nascosta o si preme Stamp, la pagina viene oscurata.
+Con `CONFIG.protectContent: true` la pagina principale blocca selezione e copia del testo, tasto destro, trascinamento e salvataggio delle immagini (anche con pressione lunga su iPhone), stampa e le scorciatoie Ctrl/Cmd+S, P, U, C, A. Quando qualcuno preme Stamp, usa le scorciatoie di screenshot o prova a copiare, appare un pannello che invita a condividere il link (copia, WhatsApp, Telegram, Facebook, X, condivisione del telefono). I testi del pannello si cambiano in `CONFIG.shareMessages` e `CONFIG.shareText`. Quando la finestra perde il focus o la scheda viene nascosta, la pagina viene oscurata.
 
 Nessun sito può impedire del tutto gli screenshot (tasti del telefono, strumenti del sistema, foto con un altro dispositivo) né l'accesso al codice sorgente: sono deterrenti. I campi dei moduli e i dati legali nel footer restano copiabili; le pagine in `legal/` restano copiabili e stampabili di proposito, perché il consumatore deve poter conservare le condizioni di vendita.
 

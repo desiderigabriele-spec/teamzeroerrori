@@ -26,6 +26,11 @@ const CONFIG = {
   photos: {},
   // blocca copia, salvataggio immagini, stampa e scoraggia gli screenshot
   protectContent: true,
+  // testo che accompagna il link quando qualcuno condivide il sito
+  shareText: "Guarda questo corso di trading sull'oro: si entra solo con 4 conferme su 4.",
+  // messaggi del pannello che appare dopo uno screenshot o un tentativo di copia
+  // (lascia null per usare quelli predefiniti in assets/js/protect.js)
+  shareMessages: null,
 };
 
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -855,6 +860,6 @@ if (finePointer && !reduced) {
   });
 }
 
-if (CONFIG.protectContent) initProtection();
+if (CONFIG.protectContent) initProtection({ messages: CONFIG.shareMessages || undefined, shareText: CONFIG.shareText });
 $('#year').textContent = String(new Date().getFullYear());
 boot();

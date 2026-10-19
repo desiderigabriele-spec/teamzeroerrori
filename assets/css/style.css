@@ -575,10 +575,35 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
 .protect body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .protect input, .protect textarea, .protect select, .protect .allow-copy { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
 .protect img, .protect canvas, .protect svg { -webkit-user-drag: none; user-drag: none; }
-.shield { position: fixed; inset: 0; z-index: 500; display: none; place-items: center; text-align: center; padding: 24px; background: #000; color: var(--green); font: 600 16px/1.6 var(--mono); }
-.shield b { color: var(--gold); font-size: 20px; }
+.shield { position: fixed; inset: 0; z-index: 500; display: none; place-items: center; padding: 16px; background: rgba(0,0,0,.92); overflow-y: auto; }
 .protect.shielded .shield { display: grid; }
-.protect.shielded main, .protect.shielded .footer, .protect.shielded .nav, .protect.shielded #matrix { filter: blur(24px); }
+.protect.shielded main, .protect.shielded .footer, .protect.shielded .nav, .protect.shielded .riskbar, .protect.shielded #matrix, .protect.shielded .fab { filter: blur(26px); }
+.shield-box { width: min(480px, 100%); background: var(--panel-solid); border: 1px solid var(--green-line); border-radius: var(--radius); box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 30px 80px rgba(0,0,0,.8), 0 0 60px rgba(0,255,65,.12); }
+.shield.pop .shield-box { animation: shieldIn .45s var(--ease); }
+@keyframes shieldIn { 0% { opacity: 0; transform: scale(.94); filter: blur(6px); } 40% { transform: scale(1.01) translateX(-3px); } 60% { transform: translateX(3px); } 100% { opacity: 1; transform: none; filter: none; } }
+.shield-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--green-faint); }
+.shield-bar i { width: 12px; height: 12px; border-radius: 50%; background: #ff5f56; }
+.shield-bar i:nth-child(2) { background: #ffbd2e; } .shield-bar i:nth-child(3) { background: #27c93f; }
+.shield-bar span { flex: 1; text-align: center; font: 12px var(--mono); color: var(--muted); margin-right: 52px; }
+.shield-body { padding: 24px; display: grid; gap: 14px; }
+.shield-eye { margin: 0; font: 600 13px var(--mono); color: var(--green); }
+.shield-eye::after { content: "█"; margin-left: 4px; animation: blink 1s steps(1) infinite; }
+.shield-title { margin: 0; font: 800 clamp(24px, 4vw, 30px)/1.15 var(--mono); color: var(--gold); letter-spacing: -.02em; }
+.shield.pop .shield-title { animation: rgbsplit .7s steps(6); }
+.shield-text { margin: 0; font-size: 16px; color: var(--text-strong); }
+.shield-url { display: flex; gap: 8px; }
+.shield-url input { flex: 1; min-width: 0; background: #000; border: 1px solid var(--green-line); border-radius: 6px; color: var(--green); font: 13px var(--mono); padding: 9px 10px; }
+.shield-share { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.share-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--green-line); background: rgba(0,255,65,.04); color: var(--text-strong); font: 700 14px var(--mono); text-decoration: none; cursor: pointer; transition: background .2s, color .2s, border-color .2s, transform .2s var(--ease); }
+.share-btn:hover { transform: translateY(-2px); color: #000; }
+.share-wa:hover { background: #25d366; border-color: #25d366; }
+.share-tg:hover { background: #2aabee; border-color: #2aabee; }
+.share-fb:hover { background: #1877f2; border-color: #1877f2; color: #fff; }
+.share-x:hover { background: #f2f2f2; border-color: #f2f2f2; }
+.share-native { grid-column: 1 / -1; }
+.share-native:hover { background: var(--green); border-color: var(--green); }
+.shield-close { justify-self: center; background: none; border: 0; color: var(--muted); font: 600 14px var(--mono); cursor: pointer; padding: 6px; }
+.shield-close:hover { color: var(--green); }
 @media print {
   .protect body { background: #fff !important; padding: 0 !important; }
   .protect body > * { display: none !important; }
