@@ -5,18 +5,17 @@ import { RoomEnvironment } from '../vendor/RoomEnvironment.js';
 
 // Un keyframe per sezione (stesso ordine delle <section> in pagina).
 // x/y/z = posizione lingotto, s = scala, o = opacità canvas, spin = velocità rotazione.
+// Il 3D si vede solo in apertura e in chiusura, così non copre mai il testo.
 const KEYS = [
-  { x: 2.5, y: 1.45, z: 0, s: 0.8, o: 1.0, spin: 0.35 },    // hero (sopra il terminale)
-  { x: -2.8, y: -0.1, z: -1.5, s: 0.8, o: 0.45, spin: 0.9 }, // errori (caos)
-  { x: 2.7, y: 0.6, z: -2.2, s: 0.75, o: 0.8, spin: 0.25 },  // metodo
-  { x: 0, y: 0.2, z: -5, s: 0.7, o: 0.22, spin: 0.12 },      // calma
-  { x: -3.2, y: 0, z: -4, s: 0.7, o: 0.18, spin: 0.2 },      // rischio
-  { x: 0, y: 1.3, z: -6, s: 0.7, o: 0.16, spin: 0.2 },       // backtest
-  { x: 2.8, y: -0.4, z: -5, s: 0.7, o: 0.15, spin: 0.2 },    // team
-  { x: -3, y: 0.4, z: -6, s: 0.7, o: 0.12, spin: 0.2 },      // percorsi
-  { x: -3.2, y: -0.3, z: -3.5, s: 0.8, o: 0.28, spin: 0.25 }, // live (dietro il telefono)
-  { x: 0, y: 0, z: -7, s: 0.7, o: 0.1, spin: 0.2 },          // faq
-  { x: 0, y: -0.1, z: -3.5, s: 1.05, o: 0.42, spin: 0.3 },   // accesso finale
+  { x: 2.5, y: 1.45, z: 0, s: 0.8, o: 1.0, spin: 0.35 },   // hero (sopra il terminale)
+  { x: 3.2, y: 1.2, z: -3, s: 0.7, o: 0, spin: 0.3 },      // come funziona
+  { x: 0, y: 0, z: -6, s: 0.7, o: 0, spin: 0.2 },          // metodo
+  { x: 0, y: 0, z: -6, s: 0.7, o: 0, spin: 0.2 },          // rischio
+  { x: 0, y: 0, z: -6, s: 0.7, o: 0, spin: 0.2 },          // backtest
+  { x: 0, y: 0, z: -6, s: 0.7, o: 0, spin: 0.2 },          // percorsi
+  { x: 0, y: 0, z: -6, s: 0.7, o: 0, spin: 0.2 },          // team
+  { x: 0, y: 0, z: -5, s: 0.8, o: 0, spin: 0.2 },          // faq
+  { x: 0, y: -0.2, z: -3.5, s: 1.0, o: 0.35, spin: 0.3 },  // finale (anelli allineati in oro)
 ];
 
 const lerp = (a, b, t) => a + (b - a) * t;

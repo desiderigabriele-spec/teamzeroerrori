@@ -1,5 +1,8 @@
 # Strategia: psicologia, neuromarketing e percorso dell'utente
 
+> **Aggiornamento, versione 2 (semplificata).** Dopo il primo feedback ("troppo confusionario") il sito è stato ridotto all'essenziale. Ordine attuale: **Hero → Come funziona (3 passi) → Il metodo (4 conferme) → Gestione del rischio → Backtest → Percorsi → Chi siamo → FAQ → Richiesta**.
+> Abbiamo tolto il log degli errori, il confronto ECG, il quiz, il telefono "live", il cursore personalizzato, l'HUD e le scanline. La scena 3D compare solo in apertura e in chiusura, il testo è in un font sans-serif leggibile e i titoli restano in monospace. I principi descritti sotto restano validi; le sezioni rimosse si possono reintrodurre in futuro, una alla volta, misurando l'effetto.
+
 Il sito non è una semplice pagina che si scorre. È un **percorso guidato in 10 passaggi**. Ogni sezione deve fare una sola cosa: portare l'utente alla successiva. Lo schema è PAS (Problema → Agitazione → Soluzione) dentro una struttura narrativa: **l'utente è l'eroe, Team Zero Errori è la guida**.
 
 Regola di fondo: **solo leve persuasive lecite e sostenibili**. Nel trading la fiducia è il prodotto: un trucco che oggi converte e domani porta una sanzione AGCM o un video "truffa" su TikTok distrugge il brand. Per questo abbiamo scelto la trasparenza come leva di vendita principale.
