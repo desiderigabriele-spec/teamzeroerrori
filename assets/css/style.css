@@ -151,11 +151,23 @@ h3 { font-size: 20px; font-weight: 700; }
 /* ---------- hero ---------- */
 .hero { min-height: calc(100vh - var(--riskbar-h) - var(--nav-h)); display: flex; align-items: center; }
 .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(30px, 5vw, 64px); align-items: center; }
-.hero-title { font-size: clamp(36px, 5vw, 66px); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
+.hero-title { font-size: clamp(34px, 4.3vw, 56px); font-weight: 800; letter-spacing: -.035em; line-height: 1.05; }
 .hero-sub { font-size: clamp(17px, 1.4vw, 19px); max-width: 600px; margin: 22px 0 0; }
-.hero-points { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 8px 26px; }
-.hero-points li { position: relative; padding-left: 26px; font-size: 16px; color: var(--text-strong); }
-.hero-points li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.hero-trust { list-style: none; padding: 0; margin: 22px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.hero-trust li { position: relative; padding-left: 24px; font-size: 15px; color: var(--text-strong); }
+.hero-trust li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+.hero { flex-direction: column; justify-content: center; gap: 36px; }
+.offer { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.offer li { position: relative; display: grid; gap: 4px; padding: 16px 18px 16px 52px; border: 1px solid var(--green-line); border-radius: var(--radius); background: var(--panel); min-width: 0; transition: border-color .3s, transform .3s var(--ease), box-shadow .3s; }
+.offer li::before { counter-increment: off; content: counter(off); position: absolute; left: 16px; top: 16px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 6px; background: var(--green); color: #000; font: 800 12px var(--mono); }
+.offer { counter-reset: off; }
+.offer b { font: 700 15px var(--mono); color: var(--gold); }
+.offer span { font-size: 14.5px; line-height: 1.45; }
+.offer li:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,201,74,.12); }
+.js .offer li { opacity: 0; transform: translateY(16px); }
+.js body:not(.is-booting) .offer li, .js .offer.in li { animation: offerIn .6s var(--ease) forwards; }
+.offer li:nth-child(2) { animation-delay: .1s !important; } .offer li:nth-child(3) { animation-delay: .2s !important; } .offer li:nth-child(4) { animation-delay: .3s !important; }
+@keyframes offerIn { to { opacity: 1; transform: none; } }
 
 /* ---------- come funziona ---------- */
 .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
@@ -301,7 +313,6 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
   body { font-size: 16px; }
   .riskbar { font-size: 11.5px; padding: 5px 12px; }
   .logo-text { display: none; }
-  .hero-points { grid-template-columns: 1fr; }
   .cta-row .btn { width: 100%; }
   .term-body { padding: 18px; }
   .plan .term-body { padding: 20px; }
@@ -527,6 +538,7 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
 .fab-txt small { color: var(--muted); font-size: 12px; }
 
 @media (max-width: 900px) {
+  .offer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .stat:last-child { grid-column: span 2; }
   .badges { grid-template-columns: minmax(0, 1fr); }
@@ -534,11 +546,13 @@ input[type="range"] { width: 100%; margin: 16px 0 6px; accent-color: var(--green
   .plans .plan:not(.is-on) { display: none; }
 }
 @media (max-width: 520px) {
+  .offer { grid-template-columns: minmax(0, 1fr); }
   .fab-txt { display: none; }
   .fab { padding: 7px; }
   .ba { height: 220px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .js .offer li { opacity: 1; transform: none; }
   .tlog tbody tr { opacity: 1; transform: none; }
   .signature path { stroke-dashoffset: 0; }
   .nots li::after { transform: scaleX(1); }

@@ -122,8 +122,8 @@ async function boot() {
 async function typeHeroTitle() {
   if (reduced) return;
   const h1 = $('#hero-title');
-  const a = 'Entra solo quando si accendono ';
-  const b = '4 conferme.';
+  const a = "Impara a fare trading sull'oro con un metodo a ";
+  const b = 'regole fisse.';
   h1.textContent = '';
   const caret = document.createElement('span');
   caret.className = 'caret';
@@ -133,7 +133,7 @@ async function typeHeroTitle() {
   const gold = document.createElement('span');
   gold.className = 'gold';
   h1.append(txt, gold, caret);
-  for (const ch of a) { txt.data += ch; await sleep(30); }
+  for (const ch of a) { txt.data += ch; await sleep(24); }
   for (const ch of b) { gold.textContent += ch; await sleep(55); }
   await sleep(1800);
   caret.remove();
