@@ -1,0 +1,8 @@
+{
+  "redirects": [
+    { "source": "/((?!pausa\\.html$).*)", "destination": "/pausa.html", "permanent": false }
+  ],
+  "headers": [
+    { "source": "/(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+  ]
+}

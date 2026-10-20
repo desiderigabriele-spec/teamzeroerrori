@@ -40,6 +40,10 @@ Serve un server: aprendo `index.html` con doppio clic, i moduli JavaScript non s
 3. Leggi **`docs/LEGALE.md`** e completa la checklist. Falla verificare da un avvocato.
 4. Pubblica su qualsiasi hosting statico: GitHub Pages, Netlify, Vercel, oppure un hosting tradizionale.
 
+## Sito in pausa
+
+Il sito è attualmente **offline**: `vercel.json` reindirizza ogni pagina a `pausa.html` ("Torniamo presto") e chiede ai motori di ricerca di non indicizzare. Per rimetterlo online basta eliminare `vercel.json` (e, se si vuole, `pausa.html`) e pubblicare.
+
 ## Accessibilità e prestazioni
 
 - `prefers-reduced-motion` disattiva le animazioni e salta la sequenza di avvio.
